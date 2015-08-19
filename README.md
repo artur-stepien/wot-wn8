@@ -1,5 +1,5 @@
 # WoT\WN8 1.04
-PHP class for processing World of Tanks WN8 stat value.
+PHP class for processing World of Tanks WN8 stat value. This class require instance of Wargamin\API that can be downloaded from here https://github.com/artur-stepien/wargaming-papi
 
 ##Sample usage##
 ``` php
