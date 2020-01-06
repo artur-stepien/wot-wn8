@@ -36,7 +36,7 @@ class WN8
      * Should application search for info about tanks missing in WN8 calculation
      * @var array
      */
-    protected $expected_tank_values = [];
+    protected $expected_tank_values;
 
     /**
      * Accurate calculation (removes OP and missing tanks from account summary data).
@@ -281,6 +281,7 @@ class WN8
 
         // Load expected tank values
         $buff = json_decode(file_get_contents($path))->data;
+
         foreach ($buff AS $tank) {
 
             // Load tanks values and index them by Tank ID
