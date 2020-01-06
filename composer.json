@@ -1,0 +1,47 @@
+{
+    "name": "artur-stepien/wot-wn8",
+    "description": "Calculates World of Tanks WN8 using https://github.com/artur-stepien/wargaming-papi api interface",
+    "keywords": [
+        "wargaming",
+        "wg",
+        "wot",
+        "wn8",
+        "world of tanks"
+    ],
+    "homepage": "https://github.com/artur-stepien/wot-wn8",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Artur Stępień",
+            "email": "artur.stepien@bestproject.pl",
+            "homepage": "http://www.bestproject.pl"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^8.5"
+    },
+    "require": {
+        "php": ">=7.0.0",
+        "ext-json": "*",
+        "ext-curl": "*",
+        "artur-stepien/wargaming-papi": "1.3.*"
+    },
+    "conflict": {
+        "artur-stepien/wot-wn8": "<=1.1"
+    },
+    "autoload": {
+        "classmap": [
+            "src/wn8.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Wargaming\\WoT\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit --bootstrap vendor/autoload.php tests/"
+    },
+    "scripts-descriptions": {}
+}
