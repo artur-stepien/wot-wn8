@@ -29,7 +29,7 @@ try {
 
 ## Changelog
 
-### 1.2.1 - 2022-02-07
+### 1.2.2 - 2022-02-07
 - Updating composer.lock
 - Minor code updates.
 
