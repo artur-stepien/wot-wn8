@@ -29,6 +29,10 @@ try {
 
 ## Changelog
 
+### 1.2.1 - 2022-02-07
+- Updating composer.lock
+- Minor code updates.
+
 ### 1.2 - 2019-01-06
 - Fixed WN8 calculation using expected tank values from modxvm.
 - Added test to assure class works as expected.

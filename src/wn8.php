@@ -72,14 +72,14 @@ class WN8
      * to get Tankopedia tanks info (name etc.) for tanks missing in WN8 calculation (those excluded from expected tank values). Application use settings from API instance.
      * So if you want to get WN8 of an account on RU cluster set proper server in Wargaming\API instance set in $api. Same for language.
      *
-     * @param API $api Wargaming\API instance version at least 1.04. It is used to retrieve data from Wargaming servers.
-     * @param string|int $search If $search is integer type application will assume it is account_id, if it is string application will search for account with nickname set to $search
-     * @param bool $accurate_calculation If $accurate_calculation is set to TRUE, application will remove OP tanks same as tanks missing in expected tank values from account summary. Warning: Accurate calculation is from 25% to 35% slower.
-     * @param bool $missing_search If $missing_search is set to TRUE, application will also add information about tanks missing in calculation (missing in expected tank values)
+     * @param API         $api                   Wargaming\API instance version at least 1.04. It is used to retrieve data from Wargaming servers.
+     * @param string|int  $search                If $search is integer type application will assume it is account_id, if it is string application will search for account with nickname set to $search
+     * @param bool        $accurate_calculation  If $accurate_calculation is set to TRUE, application will remove OP tanks same as tanks missing in expected tank values from account summary. Warning: Accurate calculation is from 25% to 35% slower.
+     * @param bool        $missing_search        If $missing_search is set to TRUE, application will also add information about tanks missing in calculation (missing in expected tank values)
      *
      * @throws Exception
      */
-    public function __construct(API $api, $search, $accurate_calculation = false, $missing_search = false)
+    public function __construct(API $api, $search, bool $accurate_calculation = false, $missing_search = false)
     {
         $this->api = $api;
         $this->accurate_calculation = $accurate_calculation;
@@ -89,10 +89,10 @@ class WN8
         if (is_string($search)) {
 
             // Get account from Wargaming servers
-            $account = $api->get('wot/account/list', array('fields' => 'account_id', 'type' => 'exact', 'search' => $search));
+            $account = $api->get('wot/account/list', ['fields' => 'account_id', 'type' => 'exact', 'search' => $search]);
 
             // If account found, store its account_id
-            if (is_array($account) AND !empty($account)) {
+            if (is_array($account) && !empty($account)) {
 
                 $this->account_id = current($account)->account_id;
 
@@ -141,13 +141,13 @@ class WN8
             $account_id = $this->account_id;
 
             // Get summary values
-            $summary = $this->api->get('wot/account/info', array(
+            $summary = $this->api->get('wot/account/info', [
                 'fields' => 'statistics.all.battles,statistics.all.frags,statistics.all.damage_dealt,statistics.all.dropped_capture_points,statistics.all.spotted,statistics.all.wins',
                 'account_id' => $account_id
-            ))->$account_id->statistics->all;
+            ])->$account_id->statistics->all;
 
             // Get tanks values
-            $tanks = $this->api->get('wot/account/tanks', array('fields' => 'tank_id,statistics.battles', 'account_id' => $account_id))->$account_id;
+            $tanks = $this->api->get('wot/account/tanks', ['fields' => 'tank_id,statistics.battles', 'account_id' => $account_id])->$account_id;
 
             // If this account has no tanks data skip calculation and return 0
             if (empty($tanks)) {
@@ -168,7 +168,7 @@ class WN8
             foreach ($tanks AS $tank) {
 
                 // Tank exists in expected tank values
-                if (key_exists($tank->tank_id, $expectedTankValues)) {
+                if (array_key_exists($tank->tank_id, $expectedTankValues)) {
 
                     // Expected values for current tank
                     $expected = $expectedTankValues[$tank->tank_id];
@@ -192,10 +192,10 @@ class WN8
             }
 
             // User want accurate calculation
-            if ($this->accurate_calculation AND !empty($missing)) {
+            if ($this->accurate_calculation && !empty($missing)) {
 
                 // Get missing tanks stats from API server
-                $missing_tanks = $this->api->get('wot/tanks/stats', array('tank_id' => implode(',', $missing), 'fields' => 'tank_id,all.battles,all.frags,all.damage_dealt,all.dropped_capture_points,all.spotted,all.wins', 'account_id' => $account_id))->$account_id;
+                $missing_tanks = $this->api->get('wot/tanks/stats', ['tank_id' => implode(',', $missing), 'fields' => 'tank_id,all.battles,all.frags,all.damage_dealt,all.dropped_capture_points,all.spotted,all.wins', 'account_id' => $account_id])->$account_id;
 
                 // Reduce account summary data
                 foreach ($missing_tanks AS $tank) {
@@ -208,8 +208,8 @@ class WN8
             }
 
             // If there are missing tanks and searching for info is set to TRUE, get those values
-            if (!empty($missing) AND $this->search_missing_tanks) {
-                $this->missing_tanks = $this->api->get('wot/encyclopedia/tankinfo', array('tank_id' => implode(',', $missing), 'fields' => 'localized_name'));
+            if (!empty($missing) && $this->search_missing_tanks) {
+                $this->missing_tanks = $this->api->get('wot/encyclopedia/tankinfo', ['tank_id' => implode(',', $missing), 'fields' => 'localized_name']);
             }
 
             // Calculate WN8
@@ -280,7 +280,7 @@ class WN8
         );
 
         // Load expected tank values
-        $buff = json_decode(file_get_contents($path))->data;
+        $buff = json_decode(file_get_contents($path), false)->data;
 
         foreach ($buff AS $tank) {
 
