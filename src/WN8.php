@@ -1,16 +1,15 @@
 <?php
 /**
  * @package     Wargaming.API
- * @version     1.1
  * @author      Artur Stępień (artur.stepien@bestproject.pl)
- * @copyright   Copyright (C) 2015 Artur Stępień, All rights reserved.
+ * @copyright   Copyright (C) 2022 Artur Stępień, All rights reserved.
  * @license     GNU General Public License version 3 or later; see LICENSE.txt
  */
 
 namespace Wargaming\WoT;
 
 use Exception;
-use Wargaming\API;
+use Wargaming\Api;
 
 /**
  * Class processing accounts WN8 stat. This class require Wargaming\API class to work.
@@ -28,7 +27,7 @@ class WN8
     /**
      * Api service instance.
      *
-     * @var \Wargaming\API
+     * @var Api
      */
     protected $api;
 
@@ -72,14 +71,14 @@ class WN8
      * to get Tankopedia tanks info (name etc.) for tanks missing in WN8 calculation (those excluded from expected tank values). Application use settings from API instance.
      * So if you want to get WN8 of an account on RU cluster set proper server in Wargaming\API instance set in $api. Same for language.
      *
-     * @param API         $api                   Wargaming\API instance version at least 1.04. It is used to retrieve data from Wargaming servers.
+     * @param Api         $api                   Wargaming\API instance version at least 1.04. It is used to retrieve data from Wargaming servers.
      * @param string|int  $search                If $search is integer type application will assume it is account_id, if it is string application will search for account with nickname set to $search
      * @param bool        $accurate_calculation  If $accurate_calculation is set to TRUE, application will remove OP tanks same as tanks missing in expected tank values from account summary. Warning: Accurate calculation is from 25% to 35% slower.
      * @param bool        $missing_search        If $missing_search is set to TRUE, application will also add information about tanks missing in calculation (missing in expected tank values)
      *
      * @throws Exception
      */
-    public function __construct(API $api, $search, bool $accurate_calculation = false, $missing_search = false)
+    public function __construct(Api $api, $search, bool $accurate_calculation = false, bool $missing_search = false)
     {
         $this->api = $api;
         $this->accurate_calculation = $accurate_calculation;
@@ -99,7 +98,7 @@ class WN8
                 // Account not found so return exception
             } else {
 
-                throw new Exception('Account <b>' . $search . '</b> not found on selected server.', '404');
+                throw new \RuntimeException('Account <b>' . $search . '</b> not found on selected server.', '404');
 
             }
 
@@ -249,7 +248,7 @@ class WN8
         }
 
         if (!is_array($this->expected_tank_values) or empty($this->expected_tank_values)) {
-            throw new Exception('Could not find tanks expected values. Makes sure it you provide it yourself using ::setExtectedTankValues() or application can load it from modxvm.com', 404);
+            throw new \RuntimeException('Could not find tanks expected values. Makes sure you provide it yourself using ::setExtectedTankValues() or application can load it from modxvm.com', 404);
         }
 
         return $this->expected_tank_values;

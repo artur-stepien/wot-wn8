@@ -1,33 +1,41 @@
-# WoT\WN8 1.2
-PHP class for processing World of Tanks WN8 stat value. This class require instance of Wargamin\API that can be downloaded from here https://github.com/artur-stepien/wargaming-papi
+# World of Tanks PHP WN8 calculation class.
+PHP class for processing World of Tanks WN8 stat value. This class uses instance of [Wargaming\Api](https://github.com/artur-stepien/wargaming-papi) and requires to register a Wargaming Developer Application. 
 
 ## Sample usage
-It is best to use composer to include class and its requirements. But you can always use it directly like this when you download both api and wn8 classes and put in same directory as your test scrip:
+It is best to use composer manage dependencies.
 ``` php
 <?php
 
+use Wargaming\Language\EN;
+use Wargaming\Server\EU;
+use Wargaming\Api;
+use Wargaming\WoT\WN8;
+
 // Include API and WN8 class
-require_once 'api.php';
-require_once 'wn8.php';
+require_once __DIR__.'/vendor/autoload.php';
 
-// API Instance (here you define on which server player has account)
-// NOTICE: Replace demo with your application key. Wargaming disabled demo application key.
-$api = new \Wargaming\API('demo', \Wargaming\LANGUAGE_ENGLISH, \Wargaming\SERVER_EU);
+// NOTICE: Replace YOUR_APPLICATION_ID with your application key.
+$language = new EN();
+$server = new EU('YOUR_APPLICATION_ID');
+$api = new Api($language, $server);
 
-// Test method to get WN8 of player malkowitch on EU server.
+// Test method to get WN8 of player ESL_Gorilla on EU server.
 try {
-	
-	echo (string)(new \Wot\WN8($api, 'malkowitch'));
-	
-	// Ups we got an error
+
+	echo 'Calculated WN8 for player [ESL_Gorilla]: '.(string)(new WN8($api, 'ESL_Gorilla'));
+
 } catch (Exception $e) {
-	
+
+	// Ups we got an error
 	die($e->getMessage());
-	
+
 }
 ```
 
 ## Changelog
+### 1.3.0 - 2022-05-09
+- Changed API version support to >1.4.x, NOTICE: You need to use new api instance so be sure to update your code on update!
+- Changed Exceptions to RuntimeException
 
 ### 1.2.2 - 2022-02-07
 - Updating composer.lock
